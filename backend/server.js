@@ -8,22 +8,27 @@ import doctorRouter from './routes/doctorRoute.js'
 import userRouter from './routes/userRoute.js'
 
 //app config
-const app=express()
-const port=process.env.PORT || 4000
-connectDB()
-connectCloudinary()
+const app = express();
+const port = process.env.PORT || 4000;
 
 //middlewares
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(cors());
 
-//api endpoints
-app.use('/api/admin',adminRouter)
-app.use('/api/doctor',doctorRouter)
-app.use('/api/user',userRouter)
+//routes
+app.use('/api/admin', adminRouter);
+app.use('/api/doctor', doctorRouter);
+app.use('/api/user', userRouter);
 
-app.get('/',(req,res)=>{
-    res.send('API is working fine')
-})
+app.get('/', (req, res) => {
+  res.send('API is working fine');
+});
 
-app.listen(port,()=>console.log("server Started at port",port))
+//start server AFTER DB
+const startServer = async () => {
+  await connectDB();
+  connectCloudinary();
+  app.listen(port, () => console.log("Server Started at port", port));
+};
+
+startServer();
